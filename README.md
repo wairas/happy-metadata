@@ -1,5 +1,5 @@
 # happy-metadata
-Meta-data format for the Happy project, working with hyper-spectral data.
+Meta-data format for the [Happy framework](https://github.com/wairas/happy), working with hyper-spectral data.
 Offers global and per-pixel meta-data. The meta-data is hierarchical, 
 i.e., if a meta-data key is not found at the pixel-level, then the 
 global meta-data is checked. Data like sample ID are therefore available 
