@@ -1,9 +1,9 @@
 # happy-metadata
 Meta-data format for the Happy project, working with hyper-spectral data.
-Offers global and per-row/column/pixel meta-data. The meta-data is 
-hierarchical, i.e., if a meta-data key is not found at the pixel-level,
-then the global meta-data is checked.
-Data like sample ID are therefore available at the pixel level as well.
+Offers global and per-pixel meta-data. The meta-data is hierarchical, 
+i.e., if a meta-data key is not found at the pixel-level, then the 
+global meta-data is checked. Data like sample ID are therefore available 
+at the pixel level as well.
 
 
 ## Format
@@ -13,7 +13,7 @@ The format has two sections:
 * `global` - contains global (per image) meta-data
 * `pixel` - contains meta-data on a per-pixel basis
 
-Below `pixel`, you can define whether the data is stored `row-wise` or 
+Below `pixel`, you can define whether the pixel data is stored `row-wise` or 
 `column-wise` (entry `type`).
 
 Row and column indices are 0-based.
@@ -25,6 +25,8 @@ Recommended entry names for the `global` section:
 
 
 ## Example
+
+The example below stores the pixel meta-data in `column-wise` fashion:
 
 ```json
 {
