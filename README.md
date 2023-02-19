@@ -23,6 +23,8 @@ Recommended entry names for the `global` section:
 * `filename`: the name of the hyper-spectral image, e.g., an ENVI image
 * `sample_id`: the ID of the sample that was imaged or the coordinates in case of GIS data  
 
+If a pixel is not specified, default values from the `default` section (under `global`) will be returned.
+
 
 ## Example
 
