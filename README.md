@@ -26,7 +26,9 @@ Required entry names for the `.global` file:
 * Row and column indices are 0-based.
 
 
-## Example
+## Examples
+
+### Data
 
 The example below stores the pixel meta-data in `column-wise` fashion:
 
@@ -66,4 +68,39 @@ The example below stores the pixel meta-data in `column-wise` fashion:
     }
   }
 }
+```
+
+### Code
+
+```python
+from hmd import HappyMetaData
+
+h = "/some/where/012345678-20230202_1234.hdr"
+g = "/some/where/012345678-20230202_1234.global"
+p = "/some/where/012345678-20230202_1234.pixels"
+
+# from an empty data structure
+print("empty data structure")
+print("====================\n")
+meta = HappyMetaData.empty()
+print(meta)
+meta.filename = h
+meta.sample_id = "012345678-20230202_1234"
+meta.set("nitrogen", value=0.6, row=0, col=0)
+print(meta)
+meta.save("/tmp")
+
+# loading meta-data from disk
+print("\nfrom disk")
+print("=========\n")
+print("using explicit .global/.pixels files")
+meta = HappyMetaData(source_global=g, source_pixels=p)
+print(meta)
+print(meta.get("nitrogen", row=0, col=0, def_value=0.7))
+print(meta)
+print(meta.get("nitrogen", row=0, col=0, def_value=0.7))
+
+print("using filename template")
+meta = HappyMetaData.load(h)
+print(meta)
 ```
