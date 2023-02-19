@@ -32,7 +32,10 @@ The example below stores the pixel meta-data in `column-wise` fashion:
 {
   "global": {
     "filename": "012345678-20230202_1234.hdr",
-    "sample_id": "012345678"
+    "sample_id": "012345678",
+    "default": {
+      "type": "BG"
+    }
   },
   "pixel": {
     "type": "column-wise",
