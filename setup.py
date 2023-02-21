@@ -26,10 +26,19 @@ setup(
         'Programming Language :: Python :: 3',
     ],
     license='MIT License',
+    install_requires=[
+        "pandas",
+        "simple-range>=0.0.2",
+    ],
     package_dir={
         '': 'src'
     },
     packages=find_namespace_packages(where='src'),
+    entry_points={
+        "console_scripts": [
+            "hmd-add-metadata=hmd.tools.add_metadata:sys_main",
+        ]
+    },
     version="0.0.1",
     author='Peter Reutemann',
     author_email='fracpete@waikato.ac.nz',

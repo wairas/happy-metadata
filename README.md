@@ -104,3 +104,34 @@ print("using filename template")
 meta = HappyMetaData.load(h)
 print(meta)
 ```
+
+## Tools
+
+### hmd-add-metadata
+
+```
+usage: hmd-add-metadata [-h] -p DIR [-r] -s FILE [-i INDEX] [-m RANGE]
+                        [-I INT]
+
+Adds (global) meta-data stored in a spreadsheet to Happy meta-data JSON files
+(ext: .global).
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p DIR, --path DIR    the directory with the Happy meta-data files (ext:
+                        .global) (default: None)
+  -r, --recursive       Whether to look for JSON files recursively. (default:
+                        False)
+  -s FILE, --spreadsheet FILE
+                        the spreadsheet with the meta-data to add
+                        (csv/xls/xslx/ods) (default: None)
+  -i INDEX, --sample_id INDEX
+                        the column with the sample ID (1-based index)
+                        (default: first)
+  -m RANGE, --meta_data RANGE
+                        the range of columns with sample data (1-based
+                        indices), automatically excludes sample ID (default:
+                        first-last)
+  -I INT, --indent INT  the indentation to use for pretty-printing the JSON
+                        files (default: None)
+```

@@ -301,4 +301,4 @@ class HappyMetaData(object):
         if os.path.exists(pname):
             return HappyMetaData(source_global=gname, source_pixels=pname)
         else:
-            return HappyMetaData(source_global=gname)
+            return HappyMetaData(source_global=gname, source_pixels={TYPE: ROW_WISE})
