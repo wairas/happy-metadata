@@ -174,10 +174,10 @@ class HappyMetaData(object):
 
             # check global meta-data?
             if not found:
-                if DEFAULT in self._meta_global.data:
-                    if field in self._meta_global.data[DEFAULT]:
-                        result = self._meta_global.data[DEFAULT][field]
-                        found = True
+                r = self.get_default(field, def_value=None)
+                if r is not None:
+                    result = r
+                    found = True
             if not found:
                 if field in self._meta_global.data:
                     result = self._meta_global.data[field]
@@ -215,6 +215,39 @@ class HappyMetaData(object):
                 self._meta_pixels.data[col][row][field] = value
             else:
                 raise Exception("Pixel data must be either stored in '%s' or '%s' fashion (key: %s)" % (ROW_WISE, COLUMN_WISE, TYPE))
+
+    def get_default(self, field, def_value=None):
+        """
+        Returns the value of the field in the DEFAULT section or the default value if not present.
+
+        :param field: the field to return the value for
+        :type field: str
+        :param def_value: the default value to return
+        :type def_value: object
+        :return: the associated value or the default value
+        :rtype: object
+        """
+        result = def_value
+
+        if DEFAULT in self._meta_global.data:
+            if field in self._meta_global.data[DEFAULT]:
+                result = self._meta_global.data[DEFAULT][field]
+
+        return result
+
+    def set_default(self, field, value):
+        """
+        Sets the default meta-data value.
+
+        :param field: the name of the meta-data value to set
+        :type field: str
+        :param value: the value to set (int, float, str, bool)
+        """
+        if (value is not None) and not isinstance(value, (int, float, str, bool)):
+            raise Exception("Only accepting: int/float/str/bool but got: %s" % str(type(value)))
+        if DEFAULT not in self._meta_global.data:
+            self._meta_global.data[DEFAULT] = dict()
+        self._meta_global.data[DEFAULT][field] = value
 
     def save_global(self, fname, indent=None):
         """
@@ -280,7 +313,7 @@ class HappyMetaData(object):
         :rtype: HappyMetaData
         """
         return HappyMetaData(
-            source_global={FILENAME: "none", SAMPLE_ID: str(datetime.now())},
+            source_global={FILENAME: "none", SAMPLE_ID: str(datetime.now()), DEFAULT: dict()},
             source_pixels={TYPE: ROW_WISE if row_wise else COLUMN_WISE})
 
     @classmethod
