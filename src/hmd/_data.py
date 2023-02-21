@@ -287,6 +287,7 @@ class HappyMetaData(object):
     def load(cls, fname):
         """
         Uses the filename as template for .global/.pixels and loads the meta-data.
+        .pixels file is optional.
 
         :param fname: the filename template to use
         :type fname: str
@@ -295,4 +296,9 @@ class HappyMetaData(object):
         """
         gname = os.path.splitext(fname)[0] + GLOBAL_EXT
         pname = os.path.splitext(fname)[0] + PIXELS_EXT
-        return HappyMetaData(source_global=gname, source_pixels=pname)
+        if not os.path.exists(gname):
+            raise Exception("Global JSON file does not exist: %s" % gname)
+        if os.path.exists(pname):
+            return HappyMetaData(source_global=gname, source_pixels=pname)
+        else:
+            return HappyMetaData(source_global=gname)
