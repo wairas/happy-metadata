@@ -1,5 +1,4 @@
 import argparse
-import json
 import os
 import pandas as pd
 import traceback
@@ -8,7 +7,15 @@ from hmd import GLOBAL_EXT, HappyMetaData
 from simple_range import index_value, range_indices, FIRST, ALL
 
 
-def add(path, metadata, recursive, indent=2):
+LOCATION_GLOBAL = "global"
+LOCATION_DEFAULT = "default"
+LOCATIONS = [
+    LOCATION_GLOBAL,
+    LOCATION_DEFAULT,
+]
+
+
+def add(path, metadata, location, recursive, indent=2):
     """
     Adds meta-data from a panda dataframe to (global) Happy meta-data JSON files.
 
@@ -16,6 +23,8 @@ def add(path, metadata, recursive, indent=2):
     :type path: str
     :param metadata: the dictionary with the metadata, the sample ID the key
     :type metadata: dict
+    :param location: where to attach the meta-data (see LOCATIONS)
+    :type location: str
     :param recursive: whether to look for JSON files recursively
     :type recursive: bool
     :param indent: the indentation to use for pretty-printing, None turns off pretty-printing
@@ -34,14 +43,19 @@ def add(path, metadata, recursive, indent=2):
         h = HappyMetaData.load(full)
         if h.sample_id in metadata:
             for k in metadata[h.sample_id]:
-                h.set(k, metadata[h.sample_id][k])
+                if location == LOCATION_GLOBAL:
+                    h.set(k, metadata[h.sample_id][k])
+                elif location == LOCATION_DEFAULT:
+                    h.set_default(k, metadata[h.sample_id][k])
+                else:
+                    raise Exception("Unhandled location: %s" % location)
             h.save_global(full, indent=indent)
             print("- %s: updated" % f)
         else:
             print("- %s: no meta-data" % f)
 
 
-def process(path, spreadsheet, sample_id=FIRST, meta_data=ALL, recursive=True, indent=2):
+def process(path, spreadsheet, location, sample_id=FIRST, meta_data=ALL, recursive=True, indent=2):
     """
     Adds meta-data from a spreadsheet to (global) Happy meta-data JSON files.
 
@@ -49,6 +63,8 @@ def process(path, spreadsheet, sample_id=FIRST, meta_data=ALL, recursive=True, i
     :type path: str
     :param spreadsheet: the spreadsheet file with the meta-data to add
     :type spreadsheet: str
+    :param location: where to attach the meta-data (see LOCATIONS)
+    :type location: str
     :param sample_id: the spreadsheet column (1-based index) with the sample ID
     :type sample_id: str
     :param meta_data: the columns in the spreadsheet containing the meta-data (1-based indices)
@@ -58,6 +74,10 @@ def process(path, spreadsheet, sample_id=FIRST, meta_data=ALL, recursive=True, i
     :param indent: the indentation to use for pretty-printing, None turns off pretty-printing
     :type indent: int
     """
+    if location not in LOCATIONS:
+        raise Exception("Invalid meta-data location: %s" % location)
+
+    # load meta-data
     ext = os.path.splitext(spreadsheet)[1].lower()
     if ext == ".csv":
         metadata = pd.read_csv(spreadsheet)
@@ -80,7 +100,9 @@ def process(path, spreadsheet, sample_id=FIRST, meta_data=ALL, recursive=True, i
         lookup[sid] = dict()
         for n in metadata_cols:
             lookup[sid][cols[n]] = metadata.iat[i, n]
-    add(path, lookup, recursive, indent=indent)
+
+    # attach meta-data
+    add(path, lookup, location, recursive, indent=indent)
 
 
 def main(args=None):
@@ -99,9 +121,10 @@ def main(args=None):
     parser.add_argument("-s", "--spreadsheet", metavar="FILE", help="the spreadsheet with the meta-data to add (csv/xls/xslx/ods)", required=True)
     parser.add_argument("-i", "--sample_id", metavar="INDEX", help="the column with the sample ID (1-based index)", required=False, default=FIRST)
     parser.add_argument("-m", "--meta_data", metavar="RANGE", help="the range of columns with sample data (1-based indices), automatically excludes sample ID", required=False, default=ALL)
+    parser.add_argument("-l", "--location", choices=LOCATIONS, help="where to attach the meta-data", required=False, default=LOCATION_GLOBAL)
     parser.add_argument("-I", "--indent", metavar="INT", help="the indentation to use for pretty-printing the JSON files", required=False, type=int, default=None)
     parsed = parser.parse_args(args=args)
-    process(parsed.path, parsed.spreadsheet,
+    process(parsed.path, parsed.spreadsheet, parsed.location,
             sample_id=parsed.sample_id, meta_data=parsed.meta_data,
             recursive=parsed.recursive, indent=parsed.indent)
 

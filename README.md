@@ -111,7 +111,7 @@ print(meta)
 
 ```
 usage: hmd-add-metadata [-h] -p DIR [-r] -s FILE [-i INDEX] [-m RANGE]
-                        [-I INT]
+                        [-l {global,default}] [-I INT]
 
 Adds (global) meta-data stored in a spreadsheet to Happy meta-data JSON files
 (ext: .global).
@@ -132,6 +132,8 @@ optional arguments:
                         the range of columns with sample data (1-based
                         indices), automatically excludes sample ID (default:
                         first-last)
+  -l {global,default}, --location {global,default}
+                        where to attach the meta-data (default: global)
   -I INT, --indent INT  the indentation to use for pretty-printing the JSON
                         files (default: None)
 ```
