@@ -223,7 +223,7 @@ class HappyMetaData(object):
         :param fname: the file to save the global meta-data to
         :rtype fname: str
         :param indent: the indentation to use, None uses minimal whitespaces
-        :type indent: bool
+        :type indent: int
         """
         with open(fname, "w") as fp:
             json.dump(self._meta_global.data, fp, indent=indent)
@@ -235,7 +235,7 @@ class HappyMetaData(object):
         :param fname: the file to save the pixel meta-data to
         :rtype fname: str
         :param indent: the indentation to use, None uses minimal whitespaces
-        :type indent: bool
+        :type indent: int
         """
         with open(fname, "w") as fp:
             json.dump(self._meta_pixels.data, fp, indent=indent)
@@ -248,7 +248,7 @@ class HappyMetaData(object):
         :param dname: the directory to save the meta-data to
         :type dname: str
         :param indent: the indentation to use, None uses minimal whitespaces
-        :type indent: bool
+        :type indent: int
         """
         if (self.sample_id is None) or (len(self.sample_id) == 0):
             raise Exception("No sample ID available, cannot generate output filenames automatically!")
